@@ -2,8 +2,8 @@
 
 one:
   balance: 1.5
-  type: 1
+  status: 1
 
 two:
   balance: 1.5
-  type: 1
+  status: 1

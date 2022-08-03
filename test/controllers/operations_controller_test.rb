@@ -12,7 +12,7 @@ class OperationsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create operation" do
     assert_difference("Operation.count") do
-      post operations_url, params: { operation: { balance: @operation.balance, type: @operation.type } }, as: :json
+      post operations_url, params: { operation: { balance: @operation.balance, status: @operation.status } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class OperationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update operation" do
-    patch operation_url(@operation), params: { operation: { balance: @operation.balance, type: @operation.type } }, as: :json
+    patch operation_url(@operation), params: { operation: { balance: @operation.balance, status: @operation.status } }, as: :json
     assert_response :success
   end
 
