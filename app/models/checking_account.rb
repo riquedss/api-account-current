@@ -1,4 +1,8 @@
 class CheckingAccount < ApplicationRecord
+    belong_to :user
+    has_many :operations
+    has_many :transfers
+
     has_secure_password
     
     validate  :account_generator

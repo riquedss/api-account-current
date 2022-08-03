@@ -1,4 +1,6 @@
 class Transfer < ApplicationRecord
+    belong_to :checking_account
+
     validates :recipient_account, :balance, presence: true
     validates :recipient_account, format: { with: REGEX_NUMBER }, length: { is: 5}
 
