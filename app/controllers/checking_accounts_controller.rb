@@ -53,7 +53,7 @@ class CheckingAccountsController < ApplicationController
         return CheckingAccount.active
 
       elsif (@status == "inactive")
-        return CheckingAccount.active
+        return CheckingAccount.inactive
       else
         return CheckingAccount.all
       end
