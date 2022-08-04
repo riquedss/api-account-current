@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :verify_authenticated
+  before_action :verify_authenticated_user
   before_action :set_user, only: %i[ show update destroy ]
 
   def index
