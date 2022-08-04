@@ -10,6 +10,13 @@ class ApplicationController < ActionController::API
         end
     end
 
+    def verify_authenticated_adm
+        @user = current_user
+        if !@user|| !@user.manager?
+            render(json: { message: "You aren't authenticated." }, status: 401)
+        end
+    end
+
     def current_checking_account
         return nil if !token || !decoded_payload
         Checking_account.find_by(id: decoded_payload[0]["checking_account_id"])
