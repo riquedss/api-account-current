@@ -13,7 +13,7 @@ class CheckingAccount < ApplicationRecord
     enum status: { on_hold: 0, active: 1, inactive: 2 }
 
     def account_generator
-        @account = "12345"
+        @account = "#{rand(10000...99999)}"
         while(account_check) do
             @account = "#{rand(10000...99999)}"
         end
