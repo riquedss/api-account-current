@@ -1,5 +1,5 @@
 class Operation < ApplicationRecord
-    belong_to :checking_account
+    belongs_to :checking_account
 
     validates :balance, :status, presence: true
     
