@@ -1,4 +1,5 @@
 class CheckingAccountsController < ApplicationController
+  before_action :verify_authenticated
   before_action :set_checking_account, only: %i[ show update destroy ]
 
   def index
