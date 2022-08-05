@@ -1,6 +1,7 @@
 class OperationsController < ApplicationController
   before_action :verify_authenticated_checking_account
   before_action :set_operation, only: %i[ show update destroy ]
+  before_action :set_checking_account, only: %i[ create ]
 
   def index
     @operations = operations_status
@@ -12,9 +13,10 @@ class OperationsController < ApplicationController
   end
 
   def create
-    @operation = Operation.new(operation_params)
+    @operation = Operation.new(operation_params_with_account)
 
     if @operation.save
+      byebug
       render(json: @operation, status: :created, location: @operation)
     else
       render(json: @operation.errors, status: :unprocessable_entity)
@@ -39,7 +41,17 @@ class OperationsController < ApplicationController
     end
 
     def operation_params
-      params.require(:operation).permit(:balance, :status)
+      params.require(:operation).permit(:balance, :status) 
+    end
+
+    def operation_params_with_account
+      operation = operation_params
+      operation["checking_account_id"] = id_checking_account
+      return operation
+    end
+
+    def id_checking_account
+      current_checking_account.id
     end
 
     def operations_status
