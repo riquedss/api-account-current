@@ -6,14 +6,14 @@ class ApplicationController < ActionController::API
 
     def verify_authenticated_user
         if !current_user
-            render(json: { message: "You aren't authenticated." }, status: 401)
+            render(json: { message: "You aren't authenticated." }, status: :unauthorized)
         end
     end
 
     def verify_authenticated_adm
         @user = current_user
         if !@user|| !@user.manager?
-            render(json: { message: "You aren't authenticated." }, status: 401)
+            render(json: { message: "You aren't authenticated." }, status: :unauthorized)
         end
     end
 
@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
 
     def verify_authenticated_checking_account
         if !current_checking_account
-            render(json: { message: "You aren't authenticated." }, status: 401)
+            render(json: { message: "You aren't authenticated." }, status: :unauthorized)
         end
     end
 
