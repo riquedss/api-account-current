@@ -12,3 +12,11 @@ User.create(name: "Henrique",
             role: 2,
             password: "123456",
             password_confirmation: "123456")
+
+User.create(name: "Henrique", 
+            last_name: "VIP", 
+            email: "teste2345@teste.com", 
+            cpf: "10476467579",
+            role: 1,
+            password: "123456",
+            password_confirmation: "123456")
