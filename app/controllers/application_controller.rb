@@ -19,7 +19,7 @@ class ApplicationController < ActionController::API
 
     def current_checking_account
         return nil if !token || !decoded_payload
-        Checking_account.find_by(id: decoded_payload[0]["checking_account_id"])
+        CheckingAccount.find_by(id: decoded_payload[0]["checking_account_id"])
     end
 
     def verify_authenticated_checking_account
