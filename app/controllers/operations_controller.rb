@@ -14,9 +14,7 @@ class OperationsController < ApplicationController
 
   def create
     @operation = Operation.new(operation_params_with_account)
-
-    if @operation.save
-      byebug
+    if @operation.save && @checking_account.update(param_update_balance)
       render(json: @operation, status: :created, location: @operation)
     else
       render(json: @operation.errors, status: :unprocessable_entity)
@@ -38,6 +36,19 @@ class OperationsController < ApplicationController
   private
     def set_operation
       @operation = Operation.find(params[:id])
+    end
+
+    def set_checking_account
+      @checking_account = CheckingAccount.find(id_checking_account)
+    end
+
+    def param_update_balance
+      if @operation.withdraw?
+        { balance:  @checking_account.balance - @operation.balance }
+      else
+        { balance:  @checking_account.balance + @operation.balance }
+      end
+
     end
 
     def operation_params
