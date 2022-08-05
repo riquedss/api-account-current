@@ -5,10 +5,10 @@ class CheckingAccount < ApplicationRecord
 
     has_secure_password
     
-    validate  :account_generator
+    validate  :account_generator, on: [ :create ]
     validates :balance, :account, presence: true
     validates :account, uniqueness: true, length: { is: 5 }
-    validates :password, format: { with: REGEX_NUMBER }, length: { is: 4}
+    validates :password, format: { with: REGEX_NUMBER }, length: { is: 4}, on: [ :create ]
 
     enum status: { on_hold: 0, active: 1, inactive: 2 }
 
