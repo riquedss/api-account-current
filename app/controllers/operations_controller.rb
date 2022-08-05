@@ -1,4 +1,5 @@
 class OperationsController < ApplicationController
+  before_action :verify_authenticated_checking_account
   before_action :set_operation, only: %i[ show update destroy ]
 
   def index
@@ -7,7 +8,7 @@ class OperationsController < ApplicationController
   end
 
   def show
-    render json: @operation
+    render(json: @operation)
   end
 
   def create

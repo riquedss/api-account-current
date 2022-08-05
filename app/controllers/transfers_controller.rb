@@ -1,4 +1,5 @@
 class TransfersController < ApplicationController
+  before_action :verify_authenticated_checking_account
   before_action :set_transfer, only: %i[ show update destroy ]
 
   def index
