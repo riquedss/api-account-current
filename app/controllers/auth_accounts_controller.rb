@@ -15,7 +15,7 @@ class AuthAccountsController < ApplicationController
     @checking_account = CheckingAccount.find_by(account: login_params[:account])
     if @checking_account&&@checking_account.authenticate(login_params[:password])
       token_account = JsonWebToken::Base.encode(checking_account_id: @checking_account.id)
-      render(json: { checking_account: @checking_account, token: token },  status: :ok)
+      render(json: { checking_account: @checking_account, token_account: token_account },  status: :ok)
     else
       render(json: { message: "Account or Password incorrect" }, status: :unauthorized)
     end
