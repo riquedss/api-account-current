@@ -12,7 +12,7 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
-  def user(checking_account)
-    User.find(checking_account.user_id)
+  def user(id)
+    User.find(id)
   end
 end

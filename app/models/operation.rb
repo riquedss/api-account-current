@@ -8,8 +8,8 @@ class Operation < ApplicationRecord
     enum status: { deposit: 0, withdraw: 1 }
 
     def status_withdrawa_role_user_comum
-      @checking_account = CheckingAccount.find(self.checking_account_id))
-      return self.withdraw? && user(@checking_account).comum? 
+      @checking_account = CheckingAccount.find(self.checking_account_id)
+      return self.withdraw? && user(@checking_account.user_id).comum? 
     end
 
     def withdrawal_is_valid
