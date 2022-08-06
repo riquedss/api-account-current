@@ -18,10 +18,4 @@ class Operation < ApplicationRecord
         errors.add(:balance, "insufficient balance for this withdrawal")
       end       
     end
-    
-    def positive
-        if self.balance <= 0
-            errors.add(:balance, "balance is not positive")
-        end
-    end
 end
