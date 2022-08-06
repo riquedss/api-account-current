@@ -12,7 +12,7 @@ class TransfersController < ApplicationController
   end
 
   def create
-    @transfer = Transfer.new(transfer_params)
+    @transfer = Transfer.new(transfer_params_with_account)
 
     if @transfer.save
       render(json: @transfer, status: :created)
@@ -40,6 +40,12 @@ class TransfersController < ApplicationController
 
     def transfer_params
       params.require(:transfer).permit(:recipient_account, :balance)
+    end
+
+    def transfer_params_with_account
+      transfer = transfer_params
+      transfer["checking_account_id"] = id_checking_account
+      return transfer
     end
 
     def transfer_status

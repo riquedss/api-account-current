@@ -65,10 +65,6 @@ class OperationsController < ApplicationController
       return operation
     end
 
-    def id_checking_account
-      current_checking_account.id
-    end
-
     def operations_status
       @status = params["status"]
       if (@status == "deposit") 
