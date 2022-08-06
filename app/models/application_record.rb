@@ -11,4 +11,8 @@ class ApplicationRecord < ActiveRecord::Base
       errors.add(:balance, "balance is not positive")
     end
   end
+
+  def user(checking_account)
+    User.find(checking_account.user_id)
+  end
 end
