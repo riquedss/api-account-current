@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_03_213502) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_06_165649) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,12 +35,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_03_213502) do
   end
 
   create_table "transfers", force: :cascade do |t|
-    t.string "recipient_account"
     t.float "balance"
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "checking_account_id", null: false
+    t.string "transfer_account"
     t.index ["checking_account_id"], name: "index_transfers_on_checking_account_id"
   end
 
