@@ -38,7 +38,7 @@ class ApplicationController < ActionController::API
   end
 
   private
-  
+
   def role_user(role, user)
     return true if role == 'user' && (user.comum? || user.vip? || user.manager?)
   end

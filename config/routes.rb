@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   put 'checking_account/active', to: 'checking_accounts#active_checking_account'
   get 'checking_account/active/user', to: 'checking_accounts#show_accounts_user'
   get 'checking_account/user', to: 'checking_accounts#show_account'
+  get 'checking_account/extrato', to: 'checking_accounts#show_extrato'
 
   resources :transfers
   resources :users
