@@ -1,17 +1,17 @@
+# frozen_string_literal: true
+
 module JsonWebToken
   class Base
-    SECRET = ENV["JWT_TOKEN"]
+    SECRET = ENV.fetch('JWT_TOKEN', nil)
 
     def self.encode(payload)
       JWT.encode(payload, SECRET)
-    end  
+    end
 
     def self.decode(token)
-      begin
-          JWT.decode(token, SECRET)
-      rescue => exception
-          return nil
-      end
+      JWT.decode(token, SECRET)
+    rescue StandardError
+      nil
     end
-  end 
+  end
 end

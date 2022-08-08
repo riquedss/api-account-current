@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_06_165649) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["account"], name: "index_checking_accounts_on_account", unique: true
     t.index ["user_id"], name: "index_checking_accounts_on_user_id"
   end
 
@@ -53,6 +54,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_06_165649) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cpf"], name: "index_users_on_cpf", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "checking_accounts", "users"

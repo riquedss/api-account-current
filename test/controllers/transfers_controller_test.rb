@@ -1,35 +1,39 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class TransfersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @transfer = transfers(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get transfers_url, as: :json
     assert_response :success
   end
 
-  test "should create transfer" do
-    assert_difference("Transfer.count") do
-      post transfers_url, params: { transfer: { balance: @transfer.balance, recipient_account: @transfer.recipient_account, status: @transfer.status } }, as: :json
+  test 'should create transfer' do
+    assert_difference('Transfer.count') do
+      post transfers_url,
+           params: { transfer: { balance: @transfer.balance, recipient_account: @transfer.recipient_account, status: @transfer.status } }, as: :json
     end
 
     assert_response :created
   end
 
-  test "should show transfer" do
+  test 'should show transfer' do
     get transfer_url(@transfer), as: :json
     assert_response :success
   end
 
-  test "should update transfer" do
-    patch transfer_url(@transfer), params: { transfer: { balance: @transfer.balance, recipient_account: @transfer.recipient_account, status: @transfer.status } }, as: :json
+  test 'should update transfer' do
+    patch transfer_url(@transfer),
+          params: { transfer: { balance: @transfer.balance, recipient_account: @transfer.recipient_account, status: @transfer.status } }, as: :json
     assert_response :success
   end
 
-  test "should destroy transfer" do
-    assert_difference("Transfer.count", -1) do
+  test 'should destroy transfer' do
+    assert_difference('Transfer.count', -1) do
       delete transfer_url(@transfer), as: :json
     end
 
