@@ -10,7 +10,7 @@
 User.create(name: 'Henrique',
             last_name: 'gerente',
             email: 'teste2@teste.com',
-            cpf: '10476467571',
+            cpf: '152.862.400-97',
             role: 2,
             password: '123456',
             password_confirmation: '123456')
@@ -18,7 +18,7 @@ User.create(name: 'Henrique',
 User.create(name: 'Henrique',
             last_name: 'VIP',
             email: 'teste2345@teste.com',
-            cpf: '10476467579',
+            cpf: '178.210.110-10',
             role: 1,
             password: '123456',
             password_confirmation: '123456')
