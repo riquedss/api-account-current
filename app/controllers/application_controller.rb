@@ -1,42 +1,45 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
-  def current_user     
-    return nil if !token || !decoded_payload
-    User.find_by(id: decoded_payload[0]["user_id"])
-  end  
+  def current_user
+    payload = decoded_payload
+    return nil if !token || !payload
 
-  def verify_authenticated_user
-    if !current_user
-      render(json: { message: "You aren't authenticated." }, status: :unauthorized)
-    end
-  end  
+    User.find_by(id: payload[0]['user_id'])
+  end
 
-  def verify_authenticated_adm
+  def verify_authenticated(role = nil)
     @user = current_user
-    if !@user|| !@user.manager?
-      render(json: { message: "You aren't authenticated." }, status: :unauthorized)
-    end
-  end  
+    return @user if @user && (@user.role == role || role_user(role, @user))
+
+    render(json: { message: "You aren't authenticated." }, status: :unauthorized)
+  end
 
   def current_checking_account
-    return nil if !token || !decoded_payload
-    CheckingAccount.find_by(id: decoded_payload[0]["checking_account_id"])
-  end  
+    payload = decoded_payload
+    return nil if !token || !payload
+
+    CheckingAccount.find_by(id: payload[0]['checking_account_id'])
+  end
 
   def verify_authenticated_checking_account
-    if !current_checking_account
-      render(json: { message: "You aren't authenticated." }, status: :unauthorized)
-    end
-  end  
+    @checking_account = current_checking_account
+    return @checking_account if @checking_account
+
+    render(json: { message: "You aren't authenticated." }, status: :unauthorized)
+  end
 
   def token
-    request.headers["token"]
-  end  
+    request.headers['token']
+  end
 
   def decoded_payload
     JsonWebToken::Base.decode(token)
-  end  
+  end
 
-  def id_checking_account
-    current_checking_account.id
+  private
+  
+  def role_user(role, user)
+    return true if role == 'user' && (user.comum? || user.vip? || user.manager?)
   end
 end

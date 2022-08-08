@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class CheckingAccountsController < ApplicationController
-  before_action :verify_authenticated_user
-  before_action :verify_authenticated_adm, except: %i[ show show_account_user ]
-  before_action :set_checking_account, only: %i[ show update destroy ]
-  before_action :set_account_for, only: %i[ active_checking_account ]
+  before_action except: %i[show_account_user] do verify_authenticated('manager') end
+  before_action only: %i[show_account_user] do @user = verify_authenticated('user') end
+  before_action :set_checking_account, only: %i[show update destroy]
+  before_action :set_account_for, only: %i[active_checking_account]
 
   def index
     @checking_accounts = checking_account_status
@@ -14,7 +16,7 @@ class CheckingAccountsController < ApplicationController
   end
 
   def show_account_user
-    @checking_accounts = CheckingAccount.where(user_id: params[:id]).active
+    @checking_accounts = CheckingAccount.where(user_id: @user.id).active
     render(json: @checking_accounts)
   end
 
@@ -37,7 +39,7 @@ class CheckingAccountsController < ApplicationController
   end
 
   def active_checking_account
-    if @checking_account.update(checking_account_update_params)
+    if @checking_account.update({ status: 1 })
       render(json: @checking_account)
     else
       render(json: @checking_account.errors, status: :unprocessable_entity)
@@ -49,37 +51,33 @@ class CheckingAccountsController < ApplicationController
   end
 
   private
-    def set_checking_account
-      @checking_account = CheckingAccount.find(params[:id])
+
+  def set_checking_account
+    @checking_account = CheckingAccount.find(params[:id])
+  end
+
+  def set_account_for
+    @checking_account = CheckingAccount.find_by(account: params[:checking_account][:account])
+    render(json: { message: 'Not_found' }, status: :not_found) unless @checking_account
+  end
+
+  def checking_account_params
+    params.require(:checking_account).permit(:password, :password_confirmation)
+  end
+
+  def checking_account_status
+    case params['status']
+    when 'on_hold'
+      CheckingAccount.on_hold
+
+    when 'active'
+      CheckingAccount.active
+
+    when 'inactive'
+      CheckingAccount.inactive
+
+    else
+      CheckingAccount.all
     end
-
-    def set_account_for
-      @checking_account = CheckingAccount.find_by(account: params[:checking_account][:account])
-      if !@checking_account
-        render(json: { message: "Not_found" }, status: :not_found)
-      end
-    end
-
-    def checking_account_update_params
-      params.require(:checking_account).permit(:account, :status)
-    end
-
-    def checking_account_params
-      params.require(:checking_account).permit(:password, :password_confirmation)
-    end
-
-    def checking_account_status
-      @status = params["status"]
-      if (@status == "on_hold") 
-        return CheckingAccount.on_hold
-
-      elsif (@status == "active")
-        return CheckingAccount.active
-
-      elsif (@status == "inactive")
-        return CheckingAccount.inactive
-      else
-        return CheckingAccount.all
-      end
-    end
+  end
 end

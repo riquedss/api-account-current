@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 class OperationsController < ApplicationController
-  before_action :verify_authenticated_checking_account
-  before_action :set_operation, only: %i[ show update destroy ]
-  before_action :set_checking_account, :set_user, only: %i[ create ]
+  before_action except: %i[create] do @user = verify_authenticated('manager') end
+  before_action only: %i[create] do @checking_account = verify_authenticated_checking_account end
+  before_action :set_operation, only: %i[show update destroy]
+  before_action :set_user, only: %i[create]
 
   def index
     @operations = operations_status
@@ -15,7 +18,7 @@ class OperationsController < ApplicationController
   def create
     @operation = Operation.new(operation_params_with_account)
     if @operation.save && @checking_account.update(param_update_balance)
-      render(json: @operation, status: :created, location: @operation)
+      render(json: @operation, status: :created)
     else
       render(json: @operation.errors, status: :unprocessable_entity)
     end
@@ -34,47 +37,44 @@ class OperationsController < ApplicationController
   end
 
   private
-    def set_operation
-      @operation = Operation.find(params[:id])
-    end
 
-    def set_checking_account
-      @checking_account = CheckingAccount.find(id_checking_account)
-    end
-    
-    def set_user
-      @user = User.find(@checking_account.user_id)
-    end
-    
-    def operation_params
-      params.require(:operation).permit(:balance, :status) 
-    end  
+  def set_operation
+    @operation = Operation.find(params[:id])
+  end
 
-    def param_update_balance
-      juros = Operations::CheckingAccountOperation.interest_adjustment(@user, @checking_account)
-      if @operation.withdraw?
-        { balance:  @checking_account.balance - @operation.balance - juros }
-      else
-        { balance:  @checking_account.balance + @operation.balance - juros }
-      end 
-    end
-    
-    def operation_params_with_account
-      operation = operation_params
-      operation["checking_account_id"] = id_checking_account
-      return operation
-    end
+  def operation_params
+    params.require(:operation).permit(:balance, :status)
+  end
 
-    def operations_status
-      @status = params["status"]
-      if (@status == "deposit") 
-        return Operation.deposit
+  def set_user
+    @user = User.find(@checking_account.user_id)
+  end
 
-      elsif (@status == "withdraw")
-        return Operation.withdraw
-
-      else
-        return Operation.all
-      end
+  def param_update_balance
+    juros = Operations::CheckingAccountOperation.interest_adjustment(@user, @checking_account)
+    if @operation.withdraw?
+      { balance:  @checking_account.balance - @operation.balance - juros }
+    else
+      { balance:  @checking_account.balance + @operation.balance - juros }
     end
+  end
+
+  def operation_params_with_account
+    operation = operation_params
+    operation['checking_account_id'] = @checking_account.id
+    operation
+  end
+
+  def operations_status
+    case params['status']
+    when 'deposit'
+      Operation.deposit
+
+    when 'withdraw'
+      Operation.withdraw
+
+    else
+      Operation.all
+    end
+  end
 end

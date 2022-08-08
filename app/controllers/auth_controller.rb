@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AuthController < ApplicationController
   def signup
     @user = User.new(user_params)
@@ -11,11 +13,11 @@ class AuthController < ApplicationController
 
   def login
     @user = User.find_by(cpf: login_params[:cpf])
-    if @user&&@user.authenticate(login_params[:password])
+    if @user&.authenticate(login_params[:password])
       token = JsonWebToken::Base.encode(user_id: @user.id)
       render(json: { user: @user, token: token },  status: :ok)
     else
-      render(json: { message: "Cpf or Password incorrect" }, status: :unauthorized)
+      render(json: { message: 'Cpf or Password incorrect' }, status: :unauthorized)
     end
   end
 

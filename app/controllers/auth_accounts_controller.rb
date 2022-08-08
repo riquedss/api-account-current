@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class AuthAccountsController < ApplicationController
-  before_action :verify_authenticated_user
+  before_action { @user = verify_authenticated('user') }
 
   def signup
     @checking_account = CheckingAccount.new(checking_account_params)
@@ -13,11 +15,12 @@ class AuthAccountsController < ApplicationController
 
   def login
     @checking_account = CheckingAccount.find_by(account: login_params[:account])
-    if @checking_account&&@checking_account.authenticate(login_params[:password])
+    if @checking_account&.authenticate(login_params[:password])
       token_account = JsonWebToken::Base.encode(checking_account_id: @checking_account.id)
-      render(json: { checking_account: @checking_account, token_account: token_account },  status: :ok)
+      render(json: { checking_account: @checking_account, token_account: token_account },
+             status: :ok)
     else
-      render(json: { message: "Account or Password incorrect" }, status: :unauthorized)
+      render(json: { message: 'Account or Password incorrect' }, status: :unauthorized)
     end
   end
 
@@ -25,11 +28,11 @@ class AuthAccountsController < ApplicationController
 
   def checking_account_params
     @checking_account = params.require(:checking_account).permit(:password, :password_confirmation)
-    @checking_account[:user_id] = current_user.id
+    @checking_account[:user_id] = @user.id
 
-    return @checking_account
+    @checking_account
   end
-  
+
   def login_params
     params.require(:checking_account).permit(:account, :password)
   end
