@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class CheckingAccountsController < ApplicationController
-  before_action except: %i[show_account_user] do verify_authenticated('manager') end
-  before_action only: %i[show_account_user] do @user = verify_authenticated('user') end
+  before_action except: %i[show_accounts_user show_account] do verify_authenticated('manager') end
+  before_action only: %i[show_accounts_user] do @user = verify_authenticated('user') end
+  before_action only: %i[show_account] do @account = verify_authenticated_checking_account end
   before_action :set_checking_account, only: %i[show update destroy]
   before_action :set_account_for, only: %i[active_checking_account]
 
@@ -15,9 +16,14 @@ class CheckingAccountsController < ApplicationController
     render(json: @checking_account)
   end
 
-  def show_account_user
+  def show_accounts_user
     @checking_accounts = CheckingAccount.where(user_id: @user.id).active
     render(json: @checking_accounts)
+  end
+
+  def show_account
+    @checking_account = CheckingAccount.find(@account.id)
+    render(json: @checking_account)
   end
 
   def create
