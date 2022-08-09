@@ -5,7 +5,8 @@ module Operations
     def self.extrato(checking_account)
       @transfer = Transfer.where(checking_account_id: checking_account.id)
       @operation = Operation.where(checking_account_id: checking_account.id)
-      @extrato = @transfer + @operation
+      @visit = Visit.where(checking_account_id: checking_account.id)
+      @extrato = @transfer + @operation + @visit
       ordena_extrato_by_time
     end
 
