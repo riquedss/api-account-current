@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'checking_account/user', to: 'checking_accounts#show_account'
   get 'checking_account/extrato', to: 'checking_accounts#show_extrato'
 
+  resources :visits
   resources :transfers
   resources :users
   resources :checking_accounts
